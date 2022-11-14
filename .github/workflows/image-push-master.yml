@@ -7,7 +7,7 @@ jobs:
   build-and-push-image-operator:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: ghcr.io/${{ github.repository }}
+      IMAGE_NAME: ${{ github.repository }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -18,7 +18,6 @@ jobs:
       - name: Login to Docker
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
           username: inspurwyd
           password: wyd,boy1988
 
@@ -35,7 +34,7 @@ jobs:
   build-and-push-image-config-daemon:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: ghcr.io/${{ github.repository }}-config-daemon
+      IMAGE_NAME: ${{ github.repository }}-config-daemon
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -46,7 +45,6 @@ jobs:
       - name: Login to Docker
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -63,7 +61,7 @@ jobs:
   build-and-push-image-webhook:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: ghcr.io/${{ github.repository }}-webhook
+      IMAGE_NAME: ${{ github.repository }}-webhook
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -74,7 +72,6 @@ jobs:
       - name: Login to Docker
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
