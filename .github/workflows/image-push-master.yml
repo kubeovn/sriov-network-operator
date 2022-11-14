@@ -2,7 +2,7 @@ name: "Push images on merge to master"
 on:
   push:
     branches:
-      - master
+      - kube-ovn-offload
 jobs:
   build-and-push-image-operator:
     runs-on: ubuntu-20.04
@@ -19,8 +19,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: inspurwyd
+          password: wyd,boy1988
 
       - name: Build and push sriov-network-operator
         uses: docker/build-push-action@v2
