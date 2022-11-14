@@ -17,7 +17,7 @@ jobs:
 
       - name: Login to Docker
         run: |
-          docker login -u inspurwyd  -p  wyd,boy1988
+          docker login -u inspurwyd  -p  123
 
       - name: Build and push sriov-network-operator
         run: |
@@ -36,7 +36,7 @@ jobs:
 
       - name: Login to Docker
         run: |
-            docker login -u inspurwyd  -p  wyd,boy1988
+            docker login -u inspurwyd  -p  123
 
       - name: Build and push sriov-network-operator-config-daemon
         run: |
@@ -55,9 +55,9 @@ jobs:
 
       - name: Login to Docker
         run: |
-            docker login -u inspurwyd  -p  wyd,boy1988
+            docker login -u inspurwyd  -p  123
 
       - name: Build and push sriov-network-operator-webhook
         run: |
-            docker build -t inspurwyd/sriov-webhook:kube-ovn-offload -f Dockerfile.webhookn .
+            docker build -t inspurwyd/sriov-webhook:kube-ovn-offload -f Dockerfile.webhook .
             docker push  inspurwyd/sriov-webhook:kube-ovn-offload
