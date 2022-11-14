@@ -52,26 +52,20 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-            - name: SRIOV_CNI_IMAGE
-              value: $SRIOV_CNI_IMAGE
-            - name: SRIOV_INFINIBAND_CNI_IMAGE
-              value: $SRIOV_INFINIBAND_CNI_IMAGE
+            - name: ENABLE_SRIOVNETWORK_CONTROLLER
+              value: "false"
+            - name: ENABLE_SRIOVIBNETWORK_CONTROLLER
+              value: "false"
+            - name: ENABLE_SRIOVNETWORKPOOLCONFIG_CONTROLLER
+              value: "false"
             - name: SRIOV_DEVICE_PLUGIN_IMAGE
               value: $SRIOV_DEVICE_PLUGIN_IMAGE
-            - name: NETWORK_RESOURCES_INJECTOR_IMAGE
-              value: $NETWORK_RESOURCES_INJECTOR_IMAGE
             - name: OPERATOR_NAME
               value: sriov-network-operator
             - name: SRIOV_NETWORK_CONFIG_DAEMON_IMAGE
               value: $SRIOV_NETWORK_CONFIG_DAEMON_IMAGE
-            - name: SRIOV_NETWORK_WEBHOOK_IMAGE
-              value: $SRIOV_NETWORK_WEBHOOK_IMAGE
             - name: RESOURCE_PREFIX
               value: $RESOURCE_PREFIX
-            - name: ENABLE_ADMISSION_CONTROLLER
-              value: "$ENABLE_ADMISSION_CONTROLLER"
-            - name: DEV_MODE
-              value: "$DEV_MODE"
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
@@ -90,5 +84,3 @@ spec:
               value: $CNI_BIN_PATH
             - name: CLUSTER_TYPE
               value: $CLUSTER_TYPE
-            - name: WEBHOOK_CA_BUNDLE
-              value: "$WEBHOOK_CA_BUNDLE"

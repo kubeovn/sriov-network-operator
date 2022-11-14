@@ -121,20 +121,26 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.SriovNetworkReconciler{
-		Client: mgrGlobal.GetClient(),
-		Scheme: mgrGlobal.GetScheme(),
-	}).SetupWithManager(mgrGlobal); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "SriovNetwork")
-		os.Exit(1)
+	if os.Getenv("ENABLE_SRIOVNETWORK_CONTROLLER") == "true" {
+		if err = (&controllers.SriovNetworkReconciler{
+			Client: mgrGlobal.GetClient(),
+			Scheme: mgrGlobal.GetScheme(),
+		}).SetupWithManager(mgrGlobal); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "SriovNetwork")
+			os.Exit(1)
+		}
 	}
-	if err = (&controllers.SriovIBNetworkReconciler{
-		Client: mgrGlobal.GetClient(),
-		Scheme: mgrGlobal.GetScheme(),
-	}).SetupWithManager(mgrGlobal); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "SriovIBNetwork")
-		os.Exit(1)
+
+	if os.Getenv("ENABLE_SRIOVIBNETWORK_CONTROLLER") == "true" {
+		if err = (&controllers.SriovIBNetworkReconciler{
+			Client: mgrGlobal.GetClient(),
+			Scheme: mgrGlobal.GetScheme(),
+		}).SetupWithManager(mgrGlobal); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "SriovIBNetwork")
+			os.Exit(1)
+		}
 	}
+
 	if err = (&controllers.SriovNetworkNodePolicyReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -149,12 +155,15 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "SriovOperatorConfig")
 		os.Exit(1)
 	}
-	if err = (&controllers.SriovNetworkPoolConfigReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "SriovNetworkPoolConfig")
-		os.Exit(1)
+
+	if os.Getenv("ENABLE_SRIOVNETWORKPOOLCONFIG_CONTROLLER") == "true" {
+		if err = (&controllers.SriovNetworkPoolConfigReconciler{
+			Client: mgr.GetClient(),
+			Scheme: mgr.GetScheme(),
+		}).SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "SriovNetworkPoolConfig")
+			os.Exit(1)
+		}
 	}
 	// +kubebuilder:scaffold:builder
 

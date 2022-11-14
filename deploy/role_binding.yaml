@@ -2,6 +2,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: sriov-network-operator
+  namespace: kube-system
 subjects:
 - kind: ServiceAccount
   name: sriov-network-operator
@@ -14,6 +15,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: sriov-network-config-daemon
+  namespace: kube-system
 subjects:
 - kind: ServiceAccount
   name: sriov-network-config-daemon
@@ -26,9 +28,11 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: operator-webhook-sa
+  namespace: kube-system
 subjects:
 - kind: ServiceAccount
   name: operator-webhook-sa
+  namespace: kube-system
 roleRef:
   kind: Role
   name: operator-webhook-sa

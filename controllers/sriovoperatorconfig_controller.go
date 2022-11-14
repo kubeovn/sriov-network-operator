@@ -106,10 +106,10 @@ func (r *SriovOperatorConfigReconciler) Reconcile(ctx context.Context, req ctrl.
 		return reconcile.Result{}, nil
 	}
 
-	// Render and sync webhook objects
+	/*// Render and sync webhook objects
 	if err = r.syncWebhookObjs(defaultConfig); err != nil {
 		return reconcile.Result{}, err
-	}
+	}*/
 
 	// Sync SriovNetworkConfigDaemon objects
 	if err = r.syncConfigDaemonSet(defaultConfig); err != nil {
@@ -169,19 +169,19 @@ func (r *SriovOperatorConfigReconciler) syncConfigDaemonSet(dc *sriovnetworkv1.S
 	data := render.MakeRenderData()
 	data.Data["Image"] = os.Getenv("SRIOV_NETWORK_CONFIG_DAEMON_IMAGE")
 	data.Data["Namespace"] = namespace
-	data.Data["SRIOVCNIImage"] = os.Getenv("SRIOV_CNI_IMAGE")
+	/*data.Data["SRIOVCNIImage"] = os.Getenv("SRIOV_CNI_IMAGE")
 	data.Data["SRIOVInfiniBandCNIImage"] = os.Getenv("SRIOV_INFINIBAND_CNI_IMAGE")
 	data.Data["ReleaseVersion"] = os.Getenv("RELEASEVERSION")
-	data.Data["ClusterType"] = utils.ClusterType
+	data.Data["ClusterType"] = utils.ClusterType*/
 	data.Data["DevMode"] = os.Getenv("DEV_MODE")
 	data.Data["ImagePullSecrets"] = GetImagePullSecrets()
-	envCniBinPath := os.Getenv("SRIOV_CNI_BIN_PATH")
+	/*envCniBinPath := os.Getenv("SRIOV_CNI_BIN_PATH")
 	if envCniBinPath == "" {
 		data.Data["CNIBinPath"] = "/var/lib/cni/bin"
 	} else {
 		logger.Info("New cni bin found", "CNIBinPath", envCniBinPath)
 		data.Data["CNIBinPath"] = envCniBinPath
-	}
+	}*/
 	objs, err := render.RenderDir(constants.ConfigDaemonPath, &data)
 	if err != nil {
 		logger.Error(err, "Fail to render config daemon manifests")

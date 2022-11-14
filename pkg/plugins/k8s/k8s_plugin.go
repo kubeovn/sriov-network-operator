@@ -239,10 +239,6 @@ func (p *K8sPlugin) readManifestFiles() error {
 		return err
 	}
 
-	if err := p.readOpenVSwitchdManifest(); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -282,7 +278,7 @@ func (p *K8sPlugin) switchdevServiceStateUpdate() error {
 }
 
 func (p *K8sPlugin) getSystemServices() []*service.Service {
-	return []*service.Service{p.networkManagerService, p.openVSwitchService}
+	return []*service.Service{p.networkManagerService}
 }
 
 func (p *K8sPlugin) isSwitchdevScriptNeedUpdate(scriptObj *service.ScriptManifestFile) (needUpdate bool, err error) {
