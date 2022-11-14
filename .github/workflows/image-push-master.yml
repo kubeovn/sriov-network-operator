@@ -7,7 +7,7 @@ jobs:
   build-and-push-image-operator:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: sriov-network-operator
+      IMAGE_NAME: sriov-operator
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -20,14 +20,11 @@ jobs:
           docker login -u inspurwyd  -p  wyd,boy1988
 
       - name: Build and push sriov-network-operator
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          file: ./Dockerfile
-
+        run: |
+            docker build -t ${{ env.IMAGE_NAME }}:latest .
+            docker build -t {{ env.IMAGE_NAME }}:${{ github.sha }} .
+            docker push ${{ env.IMAGE_NAME }}:latest
+            docker push {{ env.IMAGE_NAME }}:${{ github.sha }}
   build-and-push-image-config-daemon:
     runs-on: ubuntu-20.04
     env:
@@ -44,14 +41,11 @@ jobs:
             docker login -u inspurwyd  -p  wyd,boy1988
 
       - name: Build and push sriov-network-operator-config-daemon
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          file: ./Dockerfile.sriov-network-config-daemon
+        run: |
+            docker build -t ${{ env.IMAGE_NAME }}:latest  -f Dockerfile.sriov-network-config-daemon .
+            docker build -t {{ env.IMAGE_NAME }}:${{ github.sha }} .
+            docker push ${{ env.IMAGE_NAME }}:latest
+            docker push {{ env.IMAGE_NAME }}:${{ github.sha }}
 
   build-and-push-image-webhook:
     runs-on: ubuntu-20.04
@@ -69,11 +63,8 @@ jobs:
             docker login -u inspurwyd  -p  wyd,boy1988
 
       - name: Build and push sriov-network-operator-webhook
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          file: ./Dockerfile.webhook
+        run: |
+            docker build -t ${{ env.IMAGE_NAME }}:latest  -f Dockerfile.webhook .
+            docker build -t {{ env.IMAGE_NAME }}:${{ github.sha }} .
+            docker push ${{ env.IMAGE_NAME }}:latest
+            docker push {{ env.IMAGE_NAME }}:${{ github.sha }}
