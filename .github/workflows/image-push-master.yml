@@ -7,7 +7,7 @@ jobs:
   build-and-push-image-operator:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: sriov
+      IMAGE_NAME: sriov-network-operator
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -20,7 +20,6 @@ jobs:
           docker login -u inspurwyd  -p  wyd,boy1988
 
       - name: Build and push sriov-network-operator
-        uses: docker/build-push-action@v2
         with:
           context: .
           push: true
