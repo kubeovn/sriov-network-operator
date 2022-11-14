@@ -7,7 +7,7 @@ jobs:
   build-and-push-image-operator:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: sriov-operator
+      IMAGE_NAME: inspurwyd/sriov-operator
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -21,14 +21,12 @@ jobs:
 
       - name: Build and push sriov-network-operator
         run: |
-            docker build -t ${{ env.IMAGE_NAME }}:latest .
-            docker build -t {{ env.IMAGE_NAME }}:${{ github.sha }} .
-            docker push ${{ env.IMAGE_NAME }}:latest
-            docker push {{ env.IMAGE_NAME }}:${{ github.sha }}
+            docker build -t inspurwyd/sriov-operator:kube-ovn-offload .
+            docker push inspurwyd/sriov-operator:kube-ovn-offload
   build-and-push-image-config-daemon:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: sriov-config-daemon
+      IMAGE_NAME: inspurwyd/sriov-config-daemon
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -42,15 +40,12 @@ jobs:
 
       - name: Build and push sriov-network-operator-config-daemon
         run: |
-            docker build -t ${{ env.IMAGE_NAME }}:latest  -f Dockerfile.sriov-network-config-daemon .
-            docker build -t {{ env.IMAGE_NAME }}:${{ github.sha }} .
-            docker push ${{ env.IMAGE_NAME }}:latest
-            docker push {{ env.IMAGE_NAME }}:${{ github.sha }}
-
+            docker build -t inspurwyd/sriov-network-operator-config-daemon:kube-ovn-offload -f Dockerfile.sriov-network-config-daemon .
+            docker push  inspurwyd/sriov-network-operator-config-daemon:kube-ovn-offload
   build-and-push-image-webhook:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: sriov-webhook
+      IMAGE_NAME: inspurwyd/sriov-webhook
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -64,7 +59,5 @@ jobs:
 
       - name: Build and push sriov-network-operator-webhook
         run: |
-            docker build -t ${{ env.IMAGE_NAME }}:latest  -f Dockerfile.webhook .
-            docker build -t {{ env.IMAGE_NAME }}:${{ github.sha }} .
-            docker push ${{ env.IMAGE_NAME }}:latest
-            docker push {{ env.IMAGE_NAME }}:${{ github.sha }}
+            docker build -t inspurwyd/sriov-webhook:kube-ovn-offload -f Dockerfile.webhookn .
+            docker push  inspurwyd/sriov-webhook:kube-ovn-offload
