@@ -17,7 +17,7 @@ jobs:
 
       - name: Login to Docker
         run: |
-          docker login -u inspurwyd  --password-stdin  wyd,boy1988
+          docker login -u inspurwyd  -p  wyd,boy1988
 
       - name: Build and push sriov-network-operator
         uses: docker/build-push-action@v2
@@ -42,7 +42,7 @@ jobs:
 
       - name: Login to Docker
         run: |
-            docker login -u inspurwyd  --password-stdin  wyd,boy1988
+            docker login -u inspurwyd  -p  wyd,boy1988
 
       - name: Build and push sriov-network-operator-config-daemon
         uses: docker/build-push-action@v2
@@ -67,7 +67,7 @@ jobs:
 
       - name: Login to Docker
         run: |
-            docker login -u inspurwyd  --password-stdin  wyd,boy1988
+            docker login -u inspurwyd  -p  wyd,boy1988
 
       - name: Build and push sriov-network-operator-webhook
         uses: docker/build-push-action@v2
