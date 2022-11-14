@@ -58,7 +58,7 @@ var (
 
 // Define utility constants for object names and testing timeouts/durations and intervals.
 const (
-	testNamespace = "openshift-sriov-network-operator"
+	testNamespace = "kube-system"
 
 	timeout  = time.Second * 10
 	interval = time.Millisecond * 250
