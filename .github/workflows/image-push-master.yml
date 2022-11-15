@@ -2,12 +2,12 @@ name: "Push images on merge to master"
 on:
   push:
     branches:
-      - kube-ovn-offload
+      - master
 jobs:
   build-and-push-image-operator:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: inspurwyd/sriov-operator
+      IMAGE_NAME: ghcr.io/${{ github.repository }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -16,17 +16,26 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Login to Docker
-        run: |
-          docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push sriov-network-operator
-        run: |
-            docker build -t inspurwyd/sriov-operator:kube-ovn-offload .
-            docker push inspurwyd/sriov-operator:kube-ovn-offload
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          file: ./Dockerfile
+
   build-and-push-image-config-daemon:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: inspurwyd/sriov-config-daemon
+      IMAGE_NAME: ghcr.io/${{ github.repository }}-config-daemon
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -35,17 +44,26 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Login to Docker
-        run: |
-            docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push sriov-network-operator-config-daemon
-        run: |
-            docker build -t inspurwyd/sriov-config-daemon:kube-ovn-offload -f Dockerfile.sriov-network-config-daemon .
-            docker push  inspurwyd/sriov-config-daemon:kube-ovn-offload
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          file: ./Dockerfile.sriov-network-config-daemon
+
   build-and-push-image-webhook:
     runs-on: ubuntu-20.04
     env:
-      IMAGE_NAME: inspurwyd/sriov-webhook
+      IMAGE_NAME: ghcr.io/${{ github.repository }}-webhook
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -54,10 +72,18 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Login to Docker
-        run: |
-            docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push sriov-network-operator-webhook
-        run: |
-            docker build -t inspurwyd/sriov-webhook:kube-ovn-offload -f Dockerfile.webhook .
-            docker push  inspurwyd/sriov-webhook:kube-ovn-offload
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          file: ./Dockerfile.webhook

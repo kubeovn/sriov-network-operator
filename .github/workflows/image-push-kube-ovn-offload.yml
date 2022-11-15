@@ -1,0 +1,63 @@
+name: "Push images on merge to master"
+on:
+  push:
+    branches:
+      - kube-ovn-offload
+jobs:
+  build-and-push-image-operator:
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: inspurwyd/sriov-operator
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker
+        run: |
+          docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
+
+      - name: Build and push sriov-network-operator
+        run: |
+            docker build -t inspurwyd/sriov-operator:kube-ovn-offload .
+            docker push inspurwyd/sriov-operator:kube-ovn-offload
+  build-and-push-image-config-daemon:
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: inspurwyd/sriov-config-daemon
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker
+        run: |
+            docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
+
+      - name: Build and push sriov-network-operator-config-daemon
+        run: |
+            docker build -t inspurwyd/sriov-config-daemon:kube-ovn-offload -f Dockerfile.sriov-network-config-daemon .
+            docker push  inspurwyd/sriov-config-daemon:kube-ovn-offload
+  build-and-push-image-webhook:
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: inspurwyd/sriov-webhook
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker
+        run: |
+            docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
+
+      - name: Build and push sriov-network-operator-webhook
+        run: |
+            docker build -t inspurwyd/sriov-webhook:kube-ovn-offload -f Dockerfile.webhook .
+            docker push  inspurwyd/sriov-webhook:kube-ovn-offload

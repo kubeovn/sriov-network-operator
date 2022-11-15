@@ -12,6 +12,8 @@ spec:
     kind: SriovNetworkNodeState
     listKind: SriovNetworkNodeStateList
     plural: sriovnetworknodestates
+    shortNames:
+    - sns
     singular: sriovnetworknodestate
   scope: Namespaced
   versions:

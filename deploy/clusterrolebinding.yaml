@@ -3,6 +3,7 @@ kind: ClusterRoleBinding
 metadata:
   name: sriov-network-operator
 roleRef:
+  apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: sriov-network-operator
 subjects:
@@ -15,6 +16,7 @@ kind: ClusterRoleBinding
 metadata:
   name: sriov-network-config-daemon
 roleRef:
+  apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: sriov-network-config-daemon
 subjects:
