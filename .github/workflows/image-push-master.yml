@@ -17,7 +17,7 @@ jobs:
 
       - name: Login to Docker
         run: |
-          docker login -u inspurwyd  -p  123
+          docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
 
       - name: Build and push sriov-network-operator
         run: |
@@ -36,12 +36,12 @@ jobs:
 
       - name: Login to Docker
         run: |
-            docker login -u inspurwyd  -p  123
+            docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
 
       - name: Build and push sriov-network-operator-config-daemon
         run: |
-            docker build -t inspurwyd/sriov-network-operator-config-daemon:kube-ovn-offload -f Dockerfile.sriov-network-config-daemon .
-            docker push  inspurwyd/sriov-network-operator-config-daemon:kube-ovn-offload
+            docker build -t inspurwyd/sriov-config-daemon:kube-ovn-offload -f Dockerfile.sriov-network-config-daemon .
+            docker push  inspurwyd/sriov-config-daemon:kube-ovn-offload
   build-and-push-image-webhook:
     runs-on: ubuntu-20.04
     env:
@@ -55,7 +55,7 @@ jobs:
 
       - name: Login to Docker
         run: |
-            docker login -u inspurwyd  -p  123
+            docker login -u inspurwyd  -p  dckr_pat_yMRt21vCZj0PlDl14xJiqSOHeVg
 
       - name: Build and push sriov-network-operator-webhook
         run: |
