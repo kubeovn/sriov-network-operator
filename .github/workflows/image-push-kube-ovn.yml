@@ -2,7 +2,7 @@ name: "Push images on merge to kube-ovn-offload"
 on:
   push:
     branches:
-      - kube-ovn-offload
+      - kube-ovn
 jobs:
   build-and-push-image-operator:
     runs-on: ubuntu-20.04

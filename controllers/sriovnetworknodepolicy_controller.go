@@ -113,7 +113,7 @@ func (r *SriovNetworkNodePolicyReconciler) Reconcile(ctx context.Context, req ct
 	nodeList := &corev1.NodeList{}
 	lo := &client.MatchingLabels{
 		"feature.node.kubernetes.io/network-sriov.capable": "true",
-		"beta.kubernetes.io/os": "linux",
+		"beta.kubernetes.io/os":                            "linux",
 	}
 	defaultOpConf := &sriovnetworkv1.SriovOperatorConfig{}
 	if err := r.Get(context.TODO(), types.NamespacedName{Namespace: namespace, Name: constants.DefaultConfigName}, defaultOpConf); err != nil {
