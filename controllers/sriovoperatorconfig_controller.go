@@ -106,17 +106,8 @@ func (r *SriovOperatorConfigReconciler) Reconcile(ctx context.Context, req ctrl.
 		return reconcile.Result{}, nil
 	}
 
-	/*// Render and sync webhook objects
-	if err = r.syncWebhookObjs(defaultConfig); err != nil {
-		return reconcile.Result{}, err
-	}*/
-
 	// Sync SriovNetworkConfigDaemon objects
 	if err = r.syncConfigDaemonSet(defaultConfig); err != nil {
-		return reconcile.Result{}, err
-	}
-
-	if err = r.syncPluginDaemonSet(defaultConfig); err != nil {
 		return reconcile.Result{}, err
 	}
 

@@ -112,7 +112,7 @@ func (r *SriovNetworkNodePolicyReconciler) Reconcile(ctx context.Context, req ct
 	// Fetch the Nodes
 	nodeList := &corev1.NodeList{}
 	lo := &client.MatchingLabels{
-		"node-role.kubernetes.io/worker": "",
+		"feature.node.kubernetes.io/network-sriov.capable": "true",
 		"beta.kubernetes.io/os":          "linux",
 	}
 	defaultOpConf := &sriovnetworkv1.SriovOperatorConfig{}
@@ -133,6 +133,7 @@ func (r *SriovNetworkNodePolicyReconciler) Reconcile(ctx context.Context, req ct
 	// Sort the policies with priority, higher priority ones is applied later
 	sort.Sort(sriovnetworkv1.ByPriority(policyList.Items))
 	// Sync Sriov device plugin ConfigMap object
+	/*
 	if err = r.syncDevicePluginConfigMap(policyList, nodeList); err != nil {
 		return reconcile.Result{}, err
 	}
@@ -140,6 +141,7 @@ func (r *SriovNetworkNodePolicyReconciler) Reconcile(ctx context.Context, req ct
 	if err = r.syncPluginDaemonObjs(defaultPolicy, policyList); err != nil {
 		return reconcile.Result{}, err
 	}
+	*/
 	// Sync SriovNetworkNodeState objects
 	if err = r.syncAllSriovNetworkNodeStates(defaultPolicy, policyList, nodeList); err != nil {
 		return reconcile.Result{}, err

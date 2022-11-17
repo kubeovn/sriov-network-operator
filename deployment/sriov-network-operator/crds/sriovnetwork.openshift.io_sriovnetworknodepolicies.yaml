@@ -116,7 +116,6 @@ spec:
             - nicSelector
             - nodeSelector
             - numVfs
-            - resourceName
             type: object
           status:
             description: SriovNetworkNodePolicyStatus defines the observed state of
