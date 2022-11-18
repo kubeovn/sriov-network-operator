@@ -1,4 +1,4 @@
-name: "Push images on merge to kube-ovn-offload"
+name: "Push images on merge to kube-ovn"
 on:
   push:
     branches:
