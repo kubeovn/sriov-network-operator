@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - sriovnetwork.openshift.io_sriovibnetworks.yaml
+  - sriovnetwork.openshift.io_sriovnetworknodepolicies.yaml
+  - sriovnetwork.openshift.io_sriovnetworknodestates.yaml
+  - sriovnetwork.openshift.io_sriovnetworkpoolconfigs.yaml
+  - sriovnetwork.openshift.io_sriovnetworks.yaml
+  - sriovnetwork.openshift.io_sriovoperatorconfigs.yaml
