@@ -27,10 +27,11 @@ Clone this GitHub repository.
 go get github.com/kubeovn/sriov-network-operator
 ```
 
-# 需要修改
-Deploy the operator.
+
+Deploy the operator
+
 ```bash
-go get github.com/kubeovn/sriov-network-operator
+kubectl apply -k https://raw.githubusercontent.com/kubeovn/sriov-network-operator/kube-ovn/deploy/kustomization.yaml?token=GHSAT0AAAAAAB2PZPRDWX5MIY5MXMXPZ5QCY3XRXCA
 ```
 
 By default, the operator will be deployed in namespace 'kube-system' for Kubernetes cluster, you can check if the deployment is finished successfully.
@@ -183,6 +184,7 @@ spec:
     vendor: "15b3"
 ...
 ```
+## Check
 
 Check  available  vf 
 

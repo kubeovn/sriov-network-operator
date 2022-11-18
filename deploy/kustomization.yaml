@@ -4,14 +4,13 @@ kind: Kustomization
 namespace: kube-system
 
 bases:
-  - ../crds
+  - ./crds
 
-components:
+resources:
   - clusterrolebinding.yaml
   - clusterrole.yaml
   - configmap.yaml
   - operator-kube-ovn-offload.yaml
-  - operator.yaml
   - role_binding.yaml
   - role.yaml
   - service_account.yaml
