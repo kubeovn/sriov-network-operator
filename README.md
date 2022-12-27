@@ -1,6 +1,6 @@
 # sriov-network-operator
 
-The Sriov Network Operator is designed to help the user to provision and configure SR-IOV nic in kubernetes cluster.
+The Sriov Network Operator is designed to help the user to provision and configure SR-IOV nic and Device plugin in kubernetes cluster.
 
 ## Motivation
 
@@ -9,7 +9,8 @@ SR-IOV network is an optional feature of an kubernetes cluster. To make it work,
 ## Features
 
 - Initialize the supported SR-IOV NIC types on selected nodes.
-- Generate net-att-def CRs for SR-IOV CNI plugin
+- Provision/upgrade SR-IOV device plugin executable on selected node
+- Manage configuration of SR-IOV device plugin on host.
 - Supports operation in a virtualized Kubernetes deployment
   - Discovers VFs attached to the Virtual Machine (VM)
   - Does not require attached of associated PFs
@@ -33,7 +34,7 @@ The SR-IOV network operator introduces following new CRDs:
 
 The custom resource to represent the SR-IOV interface states of each host, which should only be managed by the operator itself.
 
-- The ‘spec’ of this CR represents the desired configuration which should be applied to the interfaces 
+- The ‘spec’ of this CR represents the desired configuration which should be applied to the interfaces and SR-IOV device plugin.
 - The ‘status’ contains current states of those PFs (baremetal only), and the states of the VFs. It helps user to discover SR-IOV network hardware on node, or attached VFs in the case of a virtual deployment.
 
 The spec is rendered by sriov-policy-controller, and consumed by sriov-config-daemon. Sriov-config-daemon is responsible for updating the ‘status’ field to reflect the latest status, this information can be used as input to create SriovNetworkNodePolicy CR.
@@ -55,6 +56,7 @@ spec:
     vfGroups:
     - policyName: policy
       vfRange: 0-2
+      resourceName: cx_sriov_switchdev
   - eSwitchMode: switchdev
     name: ens41f1np1
     numVfs: 3
@@ -62,7 +64,10 @@ spec:
     vfGroups:
     - policyName: policy
       vfRange: 0-2
-- Vfs:
+      resourceName: cx_sriov_switchdev
+status:
+  interfaces
+  - Vfs:
     - deviceID: 1018
       driver: mlx5_core
       pciAddress: 0000:5f:00.2
@@ -86,7 +91,7 @@ spec:
     pciAddress: 0000:5f:00.0
     totalvfs: 3
     vendor: "15b3"
-    
+  - Vfs:
     - deviceID: 1018
       driver: mlx5_core
       pciAddress: 0000:5f:00.5
@@ -118,7 +123,8 @@ From this example, in status field, the user can find out there are 2 SRIOV capa
 ### SriovNetworkNodePolicy
 
 This CRD is the key of SR-IOV network operator. This custom resource should be managed by cluster admin, to instruct the operator to:
-Render the spec of SriovNetworkNodeState CR for selected node, to configure the SR-IOV interfaces.  In virtual deployment, the VF interface is read-only.
+1. Render the spec of SriovNetworkNodeState CR for selected node, to configure the SR-IOV interfaces.  In virtual deployment, the VF interface is read-only.
+2. Generate the configuration of SR-IOV device plugin.
 
 An example of SriovNetworkNodePolicy CR:
 
@@ -135,8 +141,9 @@ spec:
   numVfs: 3
   nicSelector:
     pfNames:
-      - ens41f0np0
-      - ens41f1np1
+    - ens41f0np0
+    - ens41f1np1
+  resourceName: cx_sriov_switchdev
 ```
 
 In this example, user selected the nic ens41f0np0 and ens41f1np1, on nodes labeled with 'network-sriov.capable' equals 'true'. Then for those PFs, load 3 VFs each   to those virtual functions.  
@@ -144,7 +151,7 @@ In this example, user selected the nic ens41f0np0 and ens41f1np1, on nodes label
 In a virtual deployment: 
 - The mtu of the PF is set by the underlying virtualization platform and cannot be changed by the sriov-network-operator.
 - The numVfs parameter has no effect as there is always 1 VF
-- The deviceType field depends upon whether the underlying device/driver is [native-bifurcating or non-bifurcating](https://doc.dpdk.org/guides/howto/flow_bifurcation.html) For example, the supported Mellanox devices support native-bifurcating drivers and therefore deviceType should be netdevice (default).  The support Intel devices are non-bifurcating and should be set to vfio-pci.
+- The deviceType field depends upon whether the underlying device/driver is [native-bifurcating or non-bifurcating](https://doc.dpdk.org/guides/howto/flow_bifurcation.html) For example, the supported Mellanox devices support native-bifurcating drivers and therefore deviceType should be netdevice (default).
 
 #### Multiple policies
 

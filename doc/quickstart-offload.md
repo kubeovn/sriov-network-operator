@@ -43,7 +43,7 @@ NAME                             TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(
 service/sriov-network-operator   ClusterIP   10.102.53.223   <none>        8383/TCP   9s
 
 NAME                                         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                                                 AGE
-daemonset.apps/sriov-network-config-daemon   1         1         1       1            1           beta.kubernetes.io/os=linux,node-role.kubernetes.io/worker=   8s
+daemonset.apps/sriov-network-config-daemon   1         1         1       1            1           beta.kubernetes.io/os=linux,feature.node.kubernetes.io/network-sriov.capable=true   8s
 
 NAME                                     READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/sriov-network-operator   1/1     1            1           10s
@@ -125,6 +125,7 @@ spec:
     vfGroups:
     - policyName: policy
       vfRange: 0-2
+      resourceName: cx_sriov_switchdev
   - eSwitchMode: switchdev
     name: ens41f1np1
     numVfs: 3
@@ -132,7 +133,10 @@ spec:
     vfGroups:
     - policyName: policy
       vfRange: 0-2
-- Vfs:
+      resourceName: cx_sriov_switchdev
+status:
+  interfaces
+  - Vfs:
     - deviceID: 1018
       driver: mlx5_core
       pciAddress: 0000:5f:00.2
@@ -156,7 +160,7 @@ spec:
     pciAddress: 0000:5f:00.0
     totalvfs: 3
     vendor: "15b3"
-    
+  - Vfs:
     - deviceID: 1018
       driver: mlx5_core
       pciAddress: 0000:5f:00.5
@@ -180,7 +184,6 @@ spec:
     pciAddress: 0000:5f:00.1
     totalvfs: 3
     vendor: "15b3"
-...
 ```
 ## Check
 
