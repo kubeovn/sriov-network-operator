@@ -19,19 +19,16 @@ kubectl apply -k https://github.com/kubernetes-sigs/node-feature-discovery/deplo
  kubectl  label  nodes  [offloadNicNode] feature.node.kubernetes.io/network-sriov.capable=true
 ```
 
-Make sure to have installed the Operator-SDK, as shown in its [install documentation](https://sdk.operatorframework.io/docs/installation/), and that the binaries are available in your \$PATH.
-
 Clone this GitHub repository.
 
 ```bash
-go get github.com/kubeovn/sriov-network-operator
+git clone https://github.com/kubeovn/sriov-network-operator.git
 ```
-
 
 Deploy the operator
 
 ```bash
-kubectl apply -k https://raw.githubusercontent.com/kubeovn/sriov-network-operator/kube-ovn/deploy/kustomization.yaml?token=GHSAT0AAAAAAB2PZPRDWX5MIY5MXMXPZ5QCY3XRXCA
+kubectl apply -k sriov-network-operator/deploy/kustomization.yaml
 ```
 
 By default, the operator will be deployed in namespace 'kube-system' for Kubernetes cluster, you can check if the deployment is finished successfully.

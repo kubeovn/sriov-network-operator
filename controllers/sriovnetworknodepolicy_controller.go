@@ -132,6 +132,17 @@ func (r *SriovNetworkNodePolicyReconciler) Reconcile(ctx context.Context, req ct
 
 	// Sort the policies with priority, higher priority ones is applied later
 	sort.Sort(sriovnetworkv1.ByPriority(policyList.Items))
+
+	if os.Getenv("SRIOV_DEVICE_PLUGIN_IMAGE") != "" {
+		// Sync Sriov device plugin ConfigMap object
+		if err = r.syncDevicePluginConfigMap(policyList, nodeList); err != nil {
+			return reconcile.Result{}, err
+		}
+		// Render and sync Daemon objects
+		if err = r.syncPluginDaemonObjs(defaultPolicy, policyList); err != nil {
+			return reconcile.Result{}, err
+		}
+	}
 	// Sync SriovNetworkNodeState objects
 	if err = r.syncAllSriovNetworkNodeStates(defaultPolicy, policyList, nodeList); err != nil {
 		return reconcile.Result{}, err
