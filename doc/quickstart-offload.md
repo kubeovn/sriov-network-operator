@@ -107,6 +107,7 @@ spec:
     pfNames:
     - ens41f0np0
     - ens41f1np1
+  resourceName: cx_sriov_switchdev
 ```
 
 After applying your SriovNetworkNodePolicy CR, check the status of SriovNetworkNodeState again, you should be able to see the NIC has been configured as instructed.
