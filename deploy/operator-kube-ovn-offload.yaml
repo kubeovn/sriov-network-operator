@@ -62,8 +62,10 @@ spec:
               value: sriov-network-operator
             - name: SRIOV_NETWORK_CONFIG_DAEMON_IMAGE
               value: inspurwyd/sriov-config-daemon:kube-ovn
+            - name: RESOURCE_PREFIX
+              value: mellanox.com
             - name: SRIOV_DEVICE_PLUGIN_IMAGE
-              value: inspurwyd/sriov-network-device-plugin:v3.4.0
+              value: inspurwyd/sriov-network-device-plugin
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
