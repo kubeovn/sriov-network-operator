@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-1. A supported SRIOV hardware on the cluster nodes. Supported models can be found [here](https://github.com/kubeovn/sriov-network-operator/blob/kube-ovn/doc/supported-hardware.md).
+1. A supported SRIOV hardware on the cluster nodes. Supported models can be found [here](supported-hardware.md).
 2. Kubernetes cluster running on bare metal nodes.
 
 ## Installation
@@ -13,7 +13,7 @@
 kubectl apply -k https://github.com/kubernetes-sigs/node-feature-discovery/deployment/overlays/default?ref=v0.11.3
 ```
 
-**Note:** If you want to skip this step:
+**Note:** You can also use the following command instead of node-feature-discovery:
 
 ```bash
  kubectl  label  nodes  [offloadNicNode] feature.node.kubernetes.io/network-sriov.capable=true
@@ -52,7 +52,7 @@ NAME                                                DESIRED   CURRENT   READY   
 replicaset.apps/sriov-network-operator-54d7545f65   1         1         1       10s
 ```
 
-You may need to label SR-IOV worker nodes using `feature.node.kubernetes.io/network-sriov.capable=true` label, if not already.
+Check whether a label `feature.node.kubernetes.io/network-sriov.capable=true` is added to the nodes if pods not ready.
 
 ## Configuration
 
@@ -187,7 +187,7 @@ status:
 ```
 ## Check
 
-Check  available  vf 
+Check  available  vf
 
 ```bash
 lspci -nn | grep ConnectX

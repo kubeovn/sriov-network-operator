@@ -8,13 +8,12 @@ SR-IOV network is an optional feature of an kubernetes cluster. To make it work,
 
 ## Features
 
-- Initialize the supported SR-IOV NIC types on selected nodes.
-- Provision/upgrade SR-IOV device plugin executable on selected node
-- Manage configuration of SR-IOV device plugin on host.
-- Supports operation in a virtualized Kubernetes deployment
-  - Discovers VFs attached to the Virtual Machine (VM)
-  - Does not require attached of associated PFs
-  - VFs can be associated to SriovNetworks by selecting the appropriate PciAddress as the RootDevice in the SriovNetworkNodePolicy
+- Provision configurations in sriov-configmap for each node to claim the expected SR-IOV information about the node, such as the NIC name, NIC type, expected VF quantity
+- Run sriov-netowork-operator on each node as daemonset to automatically configure SR-IOV information for that node according to configmap
+  - Enable IOMMU kernel parameters, and load the VFIO PCI kernel driver
+  - List/Watch sriov-configmap and load the configurations
+  - Generate/Execute configuration scripts to create resources, such as vf
+  - Evict Pod and Restart node to take effect the SR-IOV configurations
 
 ## Quick Start
 
@@ -146,9 +145,9 @@ spec:
   resourceName: cx_sriov_switchdev
 ```
 
-In this example, user selected the nic ens41f0np0 and ens41f1np1, on nodes labeled with 'network-sriov.capable' equals 'true'. Then for those PFs, load 3 VFs each   to those virtual functions.  
+In this example, user selected the nic ens41f0np0 and ens41f1np1, on nodes labeled with 'network-sriov.capable' equals 'true'. Then for those PFs, load 3 VFs each   to those virtual functions.
 
-In a virtual deployment: 
+In a virtual deployment:
 - The mtu of the PF is set by the underlying virtualization platform and cannot be changed by the sriov-network-operator.
 - The numVfs parameter has no effect as there is always 1 VF
 - The deviceType field depends upon whether the underlying device/driver is [native-bifurcating or non-bifurcating](https://doc.dpdk.org/guides/howto/flow_bifurcation.html) For example, the supported Mellanox devices support native-bifurcating drivers and therefore deviceType should be netdevice (default).
