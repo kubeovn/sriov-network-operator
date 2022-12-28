@@ -12,6 +12,8 @@ spec:
     kind: SriovNetworkNodePolicy
     listKind: SriovNetworkNodePolicyList
     plural: sriovnetworknodepolicies
+    shortNames:
+    - sns
     singular: sriovnetworknodepolicy
   scope: Namespaced
   versions:
