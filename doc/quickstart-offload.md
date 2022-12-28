@@ -28,7 +28,7 @@ git clone https://github.com/kubeovn/sriov-network-operator.git
 Deploy the operator
 
 ```bash
-kubectl apply -k sriov-network-operator/deploy/kustomization.yaml
+kubectl apply -k sriov-network-operator/deploy
 ```
 
 By default, the operator will be deployed in namespace 'kube-system' for Kubernetes cluster, you can check if the deployment is finished successfully.
