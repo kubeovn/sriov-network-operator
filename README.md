@@ -145,7 +145,7 @@ spec:
   resourceName: cx_sriov_switchdev
 ```
 
-In this example, user selected the nic ens41f0np0 and ens41f1np1, on nodes labeled with 'network-sriov.capable' equals 'true'. Then for those PFs, load 3 VFs each   to those virtual functions.
+In this example, user selected the nic ens41f0np0 and ens41f1np1, on nodes labeled with 'network-sriov.capable' equals 'true'. Then for those PFs, load 3 VFs each to those virtual functions.
 
 In a virtual deployment:
 - The mtu of the PF is set by the underlying virtualization platform and cannot be changed by the sriov-network-operator.
