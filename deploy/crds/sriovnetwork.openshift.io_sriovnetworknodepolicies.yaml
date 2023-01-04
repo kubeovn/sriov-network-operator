@@ -13,7 +13,7 @@ spec:
     listKind: SriovNetworkNodePolicyList
     plural: sriovnetworknodepolicies
     shortNames:
-    - sns
+    - snsp
     singular: sriovnetworknodepolicy
   scope: Namespaced
   versions:
