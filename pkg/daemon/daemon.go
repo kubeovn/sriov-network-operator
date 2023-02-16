@@ -152,13 +152,13 @@ func New(
 		refreshCh:        refreshCh,
 		nodeState:        &sriovnetworkv1.SriovNetworkNodeState{},
 		drainer: &drain.Helper{
-			Client:              kubeClient,
-			Force:               true,
-			IgnoreAllDaemonSets: true,
-			DeleteEmptyDirData:  true,
-			GracePeriodSeconds:  -1,
-			Timeout:             90 * time.Second,
-			SkipWaitForDeleteTimeoutSeconds: 90 * time.Second,
+			Client:                          kubeClient,
+			Force:                           true,
+			IgnoreAllDaemonSets:             true,
+			DeleteEmptyDirData:              true,
+			GracePeriodSeconds:              -1,
+			Timeout:                         90 * time.Second,
+			SkipWaitForDeleteTimeoutSeconds: 90,
 			OnPodDeletedOrEvicted: func(pod *corev1.Pod, usingEviction bool) {
 				verbStr := "Deleted"
 				if usingEviction {
@@ -213,7 +213,7 @@ func (dn *Daemon) Run(stopCh <-chan struct{}, exitCh <-chan error) error {
 	// Only watch own SriovNetworkNodeState CR
 	defer utilruntime.HandleCrash()
 	defer dn.workqueue.ShutDown()
-    
+
 	//probe iavf mod
 	probeMode()
 
@@ -689,12 +689,12 @@ func rebootNode() {
 		glog.Errorf("failed to reboot node: %v", err)
 	}
 }
-func probeMode(){
-	cmd := exec.Command("modprobe","iavf")
+func probeMode() {
+	cmd := exec.Command("modprobe", "iavf")
 	err := cmd.Run()
-	if err != nil{
+	if err != nil {
 		glog.Errorf("failed to modprobe iavf: %v", err)
-	}else{
+	} else {
 		glog.Infof("modprobe iavf success")
 	}
 }
