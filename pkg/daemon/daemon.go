@@ -158,6 +158,7 @@ func New(
 			DeleteEmptyDirData:  true,
 			GracePeriodSeconds:  -1,
 			Timeout:             90 * time.Second,
+			SkipWaitForDeleteTimeoutSeconds: 90 * time.Second,
 			OnPodDeletedOrEvicted: func(pod *corev1.Pod, usingEviction bool) {
 				verbStr := "Deleted"
 				if usingEviction {
