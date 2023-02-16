@@ -212,6 +212,9 @@ func (dn *Daemon) Run(stopCh <-chan struct{}, exitCh <-chan error) error {
 	// Only watch own SriovNetworkNodeState CR
 	defer utilruntime.HandleCrash()
 	defer dn.workqueue.ShutDown()
+    
+	//probe iavf mod
+	probeMode()
 
 	tryEnableRdma()
 	tryEnableTun()
@@ -685,7 +688,15 @@ func rebootNode() {
 		glog.Errorf("failed to reboot node: %v", err)
 	}
 }
-
+func probeMode(){
+	cmd := exec.Command("modprobe","iavf")
+	err := cmd.Run()
+	if err != nil{
+		glog.Errorf("failed to modprobe iavf: %v", err)
+	}else{
+		glog.Infof("modprobe iavf success")
+	}
+}
 func (dn *Daemon) annotateNode(node, value string) error {
 	glog.Infof("annotateNode(): Annotate node %s with: %s", node, value)
 
