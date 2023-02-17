@@ -690,8 +690,14 @@ func rebootNode() {
 	}
 }
 func probeMode() {
+	exit, err := utils.Chroot("/host")
+	if err != nil {
+		glog.Errorf("Chroot failed(): %v", err)
+	}
+	defer exit()
+
 	cmd := exec.Command("modprobe", "iavf")
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		glog.Errorf("failed to modprobe iavf: %v", err)
 	} else {
