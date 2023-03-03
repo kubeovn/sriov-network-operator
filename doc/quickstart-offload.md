@@ -185,7 +185,7 @@ status:
     totalvfs: 3
     vendor: "15b3"
 ```
-## Check
+## Check if operator works
 
 Check  available  vf
 
