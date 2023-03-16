@@ -88,6 +88,8 @@ func (r *SriovOperatorConfigReconciler) Reconcile(ctx context.Context, req ctrl.
 				ConfigDaemonNodeSelector: map[string]string{},
 				LogLevel:                 2,
 				DisableDrain:             singleNode,
+				PodEvictionPolicy:        "delete",
+				PodEvictionForce:         true,
 			}
 
 			err = r.Create(context.TODO(), defaultConfig)

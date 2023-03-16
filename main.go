@@ -260,6 +260,8 @@ func createDefaultOperatorConfig(c client.Client) error {
 			ConfigDaemonNodeSelector: map[string]string{},
 			LogLevel:                 2,
 			DisableDrain:             singleNode,
+			PodEvictionPolicy:        "delete",
+			PodEvictionForce:         true,
 		},
 	}
 	namespace := os.Getenv("NAMESPACE")

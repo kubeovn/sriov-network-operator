@@ -41,7 +41,7 @@ type SriovOperatorConfigSpec struct {
 	// +kubebuilder:validation:Enum={"evict","delete"}
 	PodEvictionPolicy string `json:"podEvictionPolicy,omitempty"`
 	// Flag to force evict or delete
-	PodEvictionForce  bool   `json:"podEvictionForce,omitempty"`
+	PodEvictionForce bool `json:"podEvictionForce,omitempty"`
 	// Flag to enable OVS hardware offload. Set to 'true' to provision switchdev-configuration.service and enable OpenvSwitch hw-offload on nodes.
 	EnableOvsOffload bool `json:"enableOvsOffload,omitempty"`
 }
