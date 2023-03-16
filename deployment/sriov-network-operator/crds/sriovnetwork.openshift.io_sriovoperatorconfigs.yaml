@@ -44,6 +44,15 @@ spec:
               disableDrain:
                 description: Flag to disable nodes drain during debugging
                 type: boolean
+              podEvictionPolicy:
+                description: Flag to evict pod's policy
+                enum:
+                  - evict
+                  - delete
+                type: string
+              podEvictionForce:
+                description: Flag to force evict or delete
+                type: boolean
               enableInjector:
                 description: Flag to control whether the network resource injector
                   webhook shall be deployed

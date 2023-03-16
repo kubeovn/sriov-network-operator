@@ -409,6 +409,20 @@ func (dn *Daemon) operatorConfigChangeHandler(old, new interface{}) {
 		dn.disableDrain = newDisableDrain
 		glog.Infof("Set Disable Drain to: %t", dn.disableDrain)
 	}
+	if dn.drainer == nil {
+		return
+	}
+	switch newCfg.Spec.PodEvictionPolicy {
+	case "evict":
+		dn.drainer.DisableEviction = false
+	case "delete":
+		dn.drainer.DisableEviction = true
+	default:
+		dn.drainer.DisableEviction = true
+	}
+	if newCfg.Spec.PodEvictionForce {
+		dn.drainer.GracePeriodSeconds = 0
+	}
 }
 
 func (dn *Daemon) nodeStateSyncHandler() error {
