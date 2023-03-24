@@ -1,0 +1,11 @@
+apiVersion: sriovnetwork.openshift.io/v1
+kind: SriovOperatorConfig
+metadata:
+  name: default
+  namespace: kube-system
+spec:
+  enableInjector: false
+  enableOperatorWebhook: false
+  logLevel: 2
+  podEvictionForce: true
+  podEvictionPolicy: delete
