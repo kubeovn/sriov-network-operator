@@ -14,3 +14,4 @@ resources:
   - role_binding.yaml
   - role.yaml
   - service_account.yaml
+  - sriov-operator-config-default.yaml
