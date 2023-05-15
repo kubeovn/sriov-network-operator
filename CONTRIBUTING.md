@@ -90,4 +90,4 @@ $ git checkout -b dev/some-topic-branch
 ## Contact Us
 - General channel on [NPWG](https://npwg-team.slack.com/) Slack. Request an invite to NPWG slack [here](https://intel-corp.herokuapp.com/).
 - Feel free to post GitHub issues and PRs for review
-- Attend either K8s Network & Resource mangement or Additional K8s Network & Resource management meetings
+- Attend either K8s Network & Resource management or Additional K8s Network & Resource management meetings
