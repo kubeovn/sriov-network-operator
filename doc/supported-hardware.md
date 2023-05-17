@@ -72,7 +72,7 @@ should follow the following procedure:
 * Perform Testing on requested hardware using:
   * Kubernetes last release
   * Either last release version or master version of sriov-network-operator
-  * Note: We do not have a specifc list of test-cases however you should at a minimum ensure
+  * Note: We do not have a specific list of test-cases however you should at a minimum ensure
       sriov-network-operator is able to properly discover your device, configure SR-IOV and
       expose them as a kubernetes node resource, and you are able to run workloads consuming
       those resources.
