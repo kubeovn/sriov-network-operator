@@ -215,7 +215,7 @@ func (dn *Daemon) Run(stopCh <-chan struct{}, exitCh <-chan error) error {
 	defer dn.workqueue.ShutDown()
 
 	//probe iavf mod
-	probeMode()
+	tryProbeMode()
 
 	tryEnableRdma()
 	tryEnableTun()
@@ -703,7 +703,7 @@ func rebootNode() {
 		glog.Errorf("failed to reboot node: %v", err)
 	}
 }
-func probeMode() {
+func tryProbeMode() {
 	exit, err := utils.Chroot("/host")
 	if err != nil {
 		glog.Errorf("Chroot failed(): %v", err)
