@@ -249,36 +249,7 @@ func NeedUpdate(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetworkv1.Int
 		glog.V(2).Infof("NeedUpdate(): NumVfs needs update desired=%d, current=%d", iface.NumVfs, ifaceStatus.NumVfs)
 		return true
 	}
-	if iface.NumVfs > 0 {
-		for _, vf := range ifaceStatus.VFs {
-			ingroup := false
-			for _, group := range iface.VfGroups {
-				if sriovnetworkv1.IndexInRange(vf.VfID, group.VfRange) {
-					ingroup = true
-					if group.DeviceType != constants.DeviceTypeNetDevice {
-						if group.DeviceType != vf.Driver {
-							glog.V(2).Infof("NeedUpdate(): Driver needs update, desired=%s, current=%s", group.DeviceType, vf.Driver)
-							return true
-						}
-					} else {
-						if sriovnetworkv1.StringInArray(vf.Driver, DpdkDrivers) {
-							glog.V(2).Infof("NeedUpdate(): Driver needs update, desired=%s, current=%s", group.DeviceType, vf.Driver)
-							return true
-						}
-						if vf.Mtu != 0 && group.Mtu != 0 && vf.Mtu != group.Mtu {
-							glog.V(2).Infof("NeedUpdate(): VF %d MTU needs update, desired=%d, current=%d", vf.VfID, group.Mtu, vf.Mtu)
-							return true
-						}
-					}
-					break
-				}
-			}
-			if !ingroup && sriovnetworkv1.StringInArray(vf.Driver, DpdkDrivers) {
-				// VF which has DPDK driver loaded but not in any group, needs to be reset to default driver.
-				return true
-			}
-		}
-	}
+
 	return false
 }
 
