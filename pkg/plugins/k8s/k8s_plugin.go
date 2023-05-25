@@ -274,7 +274,7 @@ func (p *K8sPlugin) switchdevServiceStateUpdate() error {
 		return err
 	}
 	p.updateTarget.switchdevUdevScript = needUpdate
-	glog.Info("k8s-plugin K8sPlugin.updateTarget: %v", p.updateTarget)
+	glog.Info(fmt.Sprintf("k8s-plugin K8sPlugin.updateTarget: %v", p.updateTarget))
 	return nil
 }
 
