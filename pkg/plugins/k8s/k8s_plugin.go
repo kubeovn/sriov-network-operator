@@ -243,6 +243,7 @@ func (p *K8sPlugin) readManifestFiles() error {
 }
 
 func (p *K8sPlugin) switchdevServiceStateUpdate() error {
+	glog.Info("k8s-plugin switchdevServiceStateUpdate()")
 	// Check switchdev service
 	needUpdate, err := p.isSwitchdevServiceNeedUpdate(p.switchdevBeforeNMService)
 	if err != nil {
@@ -273,7 +274,7 @@ func (p *K8sPlugin) switchdevServiceStateUpdate() error {
 		return err
 	}
 	p.updateTarget.switchdevUdevScript = needUpdate
-
+	glog.Info("k8s-plugin K8sPlugin.updateTarget: %v", p.updateTarget)
 	return nil
 }
 
