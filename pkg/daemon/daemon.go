@@ -420,7 +420,7 @@ func (dn *Daemon) operatorConfigChangeHandler(old, new interface{}) {
 	default:
 		dn.drainer.DisableEviction = true
 	}
-	if newCfg.Spec.PodEvictionForce {
+	if newCfg.Spec.PodEvictionForce || dn.drainer.DisableEviction {
 		dn.drainer.GracePeriodSeconds = 0
 	}
 }
