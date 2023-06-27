@@ -1,6 +1,6 @@
-# sriov-network-operator
-**forked from [openshift/sriov-network-operator](https://github.com/openshift/sriov-network-operator)** 
+This project fork  from [openshift/sriov-network-operator](https://github.com/openshift/sriov-network-operator), we made some optimization to adapt rdma and kube-ovn's ovs offload function, and modified some bugs in the production environment
 
+# sriov-network-operator
 The Sriov Network Operator is designed to help the user to provision and configure SR-IOV nic and Device plugin in kubernetes cluster.
 
 ## Motivation
