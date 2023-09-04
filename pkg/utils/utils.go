@@ -289,11 +289,17 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 			return err
 		}
 
-		for _, addr := range vfAddrs {
+		for vfNum, addr := range vfAddrs {
 			var group sriovnetworkv1.VfGroup
 			i := 0
 			var dpdkDriver string
 			var isRdma bool
+
+			linkType := iface.LinkType
+			if linkType == "" {
+				linkType = ifaceStatus.LinkType
+			}
+
 			vfID, err := dputils.GetVFID(addr)
 			for i, group = range iface.VfGroups {
 				if err != nil {
@@ -307,17 +313,12 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 					break
 				}
 			}
-
 			// only set GUID and MAC for VF with default driver
 			// for userspace drivers like vfio we configure the vf mac using the kernel nic mac address
 			// before we switch to the userspace driver
 			if yes, d := hasDriver(addr); yes && !sriovnetworkv1.StringInArray(d, DpdkDrivers) {
 				// LinkType is an optional field. Let's fallback to current link type
 				// if nothing is specified in the SriovNodePolicy
-				linkType := iface.LinkType
-				if linkType == "" {
-					linkType = ifaceStatus.LinkType
-				}
 				if strings.EqualFold(linkType, constants.LinkTypeIB) {
 					if err = setVfGUID(addr, pfLink); err != nil {
 						return err
@@ -362,11 +363,27 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 						return err
 					}
 				}
+
 			} else {
 				if err := BindDpdkDriver(addr, dpdkDriver); err != nil {
 					glog.Warningf("configSriovDevice(): fail to bind driver %s for device %s", dpdkDriver, addr)
 					return err
 				}
+			}
+
+			glog.Errorf("configSriovDevice(): linkType  :'%s'", linkType)
+			// Set the vf state to "Follow"
+			if strings.EqualFold(linkType, constants.LinkTypeIB) {
+				IBdevicePolicyPath := filepath.Join(sysClassNet, ifaceStatus.Name, "device/sriov/"+strconv.Itoa(vfNum)+"/policy")
+				if err := ioutil.WriteFile(IBdevicePolicyPath, []byte("Follow"), 0666); err != nil {
+					glog.Warningf("configSriovDevice(): fail to set vf state %s: %v", IBdevicePolicyPath, err)
+					return err
+				}
+				bytes, err := ioutil.ReadFile(IBdevicePolicyPath)
+				if err != nil {
+					glog.Warningf("configSriovDevice(): read error  %s", err.Error())
+				}
+				glog.Errorf("configSriovDevice(): state  :'%s'", string(bytes))
 			}
 		}
 	}
