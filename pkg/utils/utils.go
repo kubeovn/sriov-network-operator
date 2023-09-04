@@ -32,6 +32,7 @@ const (
 	sysBusPciDrivers      = "/sys/bus/pci/drivers"
 	sysBusPciDriversProbe = "/sys/bus/pci/drivers_probe"
 	sysClassNet           = "/sys/class/net"
+	sysInfinibandPolicy   = "/sys/class/infiniband"
 	netClass              = 0x02
 	numVfsFile            = "sriov_numvfs"
 	scriptsPath           = "bindata/scripts/load-kmod.sh"
@@ -256,6 +257,25 @@ func NeedUpdate(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetworkv1.Int
 func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetworkv1.InterfaceExt) error {
 	glog.V(2).Infof("configSriovDevice(): config interface %s with %v", iface.PciAddress, iface)
 	var err error
+	// device is IB
+	IBdevice := ""
+	IBdevicePath := filepath.Join(sysClassNet, ifaceStatus.Name, "device/infiniband")
+	fmt.Errorf("configSriovDevice(): IBdevicePath  path:'%s'", IBdevicePath )
+	if strings.EqualFold(ifaceStatus.LinkType, constants.LinkTypeIB) {
+		 fileName, err := ioutil.ReadDir(IBdevicePath)
+		 if err != nil {
+			return fmt.Errorf("configSriovDevice(): failed to get deviceInfo path:'%s',err: '%s'", IBdevicePath, err.Error())
+		 }
+		if len(fileName) == 0 {
+			return fmt.Errorf("configSriovDevice(): failed to get deviceInfo path:'%s',err: '%s'", IBdevicePath, "ib device is empty" )
+		}
+		IBdevice = fileName[0].Name()
+		fmt.Errorf("configSriovDevice(): IBdevice  :'%s'", IBdevice )
+	}
+	if err != nil {
+		glog.Errorf("configSriovDevice(): fail to set NumVfs for device %s", iface.PciAddress)
+		return err
+	}
 	if iface.NumVfs > ifaceStatus.TotalVfs {
 		err := fmt.Errorf("cannot config SRIOV device: NumVfs (%d) is larger than TotalVfs (%d)", iface.NumVfs, ifaceStatus.TotalVfs)
 		glog.Errorf("configSriovDevice(): fail to set NumVfs for device %s: %v", iface.PciAddress, err)
@@ -362,6 +382,21 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 						return err
 					}
 				}
+				linkType := iface.LinkType
+				if linkType == "" {
+					linkType = ifaceStatus.LinkType
+				}
+				// Set the vf state to "Follow"
+				if strings.EqualFold(linkType, constants.LinkTypeIB) {
+					//IBdevice
+					IBdevicePolicyPath := filepath.Join(sysInfinibandPolicy, IBdevice, "device/sriov/"+strconv.Itoa(i)+"/policy")
+					fmt.Errorf("configSriovDevice(): IBdevicePolicyPath  :'%s'", IBdevicePolicyPath )
+					if err :=  ioutil.WriteFile(IBdevicePolicyPath,[]byte("Follow"),0666); err != nil {
+						glog.Warningf("configSriovDevice(): fail to set vf state %s: %v", IBdevicePolicyPath, err)
+						return err
+					}
+				}
+
 			} else {
 				if err := BindDpdkDriver(addr, dpdkDriver); err != nil {
 					glog.Warningf("configSriovDevice(): fail to bind driver %s for device %s", dpdkDriver, addr)
