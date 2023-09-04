@@ -32,7 +32,6 @@ const (
 	sysBusPciDrivers      = "/sys/bus/pci/drivers"
 	sysBusPciDriversProbe = "/sys/bus/pci/drivers_probe"
 	sysClassNet           = "/sys/class/net"
-	sysInfinibandPolicy   = "/sys/class/infiniband"
 	netClass              = 0x02
 	numVfsFile            = "sriov_numvfs"
 	scriptsPath           = "bindata/scripts/load-kmod.sh"
@@ -257,26 +256,6 @@ func NeedUpdate(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetworkv1.Int
 func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetworkv1.InterfaceExt) error {
 	glog.V(2).Infof("configSriovDevice(): config interface %s with %v", iface.PciAddress, iface)
 	var err error
-	// device is IB
-	IBdevice := ""
-	IBdevicePath := filepath.Join(sysClassNet, ifaceStatus.Name, "device/infiniband")
-	glog.Errorf("configSriovDevice(): IBdevicePath  path:'%s'", IBdevicePath)
-	glog.Errorf("configSriovDevice(): ifaceStatus.LinkType:'%s'", ifaceStatus.LinkType)
-	if strings.EqualFold(ifaceStatus.LinkType, constants.LinkTypeIB) {
-		fileName, err := ioutil.ReadDir(IBdevicePath)
-		if err != nil {
-			return fmt.Errorf("configSriovDevice(): failed to get deviceInfo path:'%s',err: '%s'", IBdevicePath, err.Error())
-		}
-		if len(fileName) == 0 {
-			return fmt.Errorf("configSriovDevice(): failed to get deviceInfo path:'%s',err: '%s'", IBdevicePath, "ib device is empty")
-		}
-		IBdevice = fileName[0].Name()
-		glog.Errorf("configSriovDevice(): IBdevice  :'%s'", IBdevice)
-	}
-	if err != nil {
-		glog.Errorf("configSriovDevice(): fail to set NumVfs for device %s", iface.PciAddress)
-		return err
-	}
 	if iface.NumVfs > ifaceStatus.TotalVfs {
 		err := fmt.Errorf("cannot config SRIOV device: NumVfs (%d) is larger than TotalVfs (%d)", iface.NumVfs, ifaceStatus.TotalVfs)
 		glog.Errorf("configSriovDevice(): fail to set NumVfs for device %s: %v", iface.PciAddress, err)
@@ -315,6 +294,12 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 			i := 0
 			var dpdkDriver string
 			var isRdma bool
+
+			linkType := iface.LinkType
+			if linkType == "" {
+				linkType = ifaceStatus.LinkType
+			}
+
 			vfID, err := dputils.GetVFID(addr)
 			for i, group = range iface.VfGroups {
 				if err != nil {
@@ -328,17 +313,12 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 					break
 				}
 			}
-
 			// only set GUID and MAC for VF with default driver
 			// for userspace drivers like vfio we configure the vf mac using the kernel nic mac address
 			// before we switch to the userspace driver
 			if yes, d := hasDriver(addr); yes && !sriovnetworkv1.StringInArray(d, DpdkDrivers) {
 				// LinkType is an optional field. Let's fallback to current link type
 				// if nothing is specified in the SriovNodePolicy
-				linkType := iface.LinkType
-				if linkType == "" {
-					linkType = ifaceStatus.LinkType
-				}
 				if strings.EqualFold(linkType, constants.LinkTypeIB) {
 					if err = setVfGUID(addr, pfLink); err != nil {
 						return err
@@ -390,17 +370,11 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 					return err
 				}
 			}
-			linkType := iface.LinkType
-			if linkType == "" {
-				linkType = ifaceStatus.LinkType
-			}
-			glog.Errorf("begin to  Set the vf state to Follow")
+
 			glog.Errorf("configSriovDevice(): linkType  :'%s'", linkType)
 			// Set the vf state to "Follow"
 			if strings.EqualFold(linkType, constants.LinkTypeIB) {
-				//IBdevice
-				IBdevicePolicyPath := filepath.Join(sysInfinibandPolicy, IBdevice, "device/sriov/"+strconv.Itoa(vfNum)+"/policy")
-				glog.Errorf("configSriovDevice(): IBdevicePolicyPath  :'%s'", IBdevicePolicyPath)
+				IBdevicePolicyPath := filepath.Join(sysClassNet, ifaceStatus.Name, "device/sriov/"+strconv.Itoa(vfNum)+"/policy")
 				if err := ioutil.WriteFile(IBdevicePolicyPath, []byte("Follow"), 0666); err != nil {
 					glog.Warningf("configSriovDevice(): fail to set vf state %s: %v", IBdevicePolicyPath, err)
 					return err
@@ -411,7 +385,6 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 				}
 				glog.Errorf("configSriovDevice(): state  :'%s'", string(bytes))
 			}
-
 		}
 	}
 	// Set PF link up
