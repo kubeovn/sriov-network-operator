@@ -310,7 +310,7 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 			return err
 		}
 
-		for _, addr := range vfAddrs {
+		for vfNum, addr := range vfAddrs {
 			var group sriovnetworkv1.VfGroup
 			i := 0
 			var dpdkDriver string
@@ -399,7 +399,7 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 			// Set the vf state to "Follow"
 			if strings.EqualFold(linkType, constants.LinkTypeIB) {
 				//IBdevice
-				IBdevicePolicyPath := filepath.Join(sysInfinibandPolicy, IBdevice, "device/sriov/"+strconv.Itoa(i)+"/policy")
+				IBdevicePolicyPath := filepath.Join(sysInfinibandPolicy, IBdevice, "device/sriov/"+strconv.Itoa(vfNum)+"/policy")
 				glog.Errorf("configSriovDevice(): IBdevicePolicyPath  :'%s'", IBdevicePolicyPath)
 				if err := ioutil.WriteFile(IBdevicePolicyPath, []byte("Follow"), 0666); err != nil {
 					glog.Warningf("configSriovDevice(): fail to set vf state %s: %v", IBdevicePolicyPath, err)
