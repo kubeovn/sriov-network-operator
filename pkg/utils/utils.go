@@ -260,7 +260,8 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 	// device is IB
 	IBdevice := ""
 	IBdevicePath := filepath.Join(sysClassNet, ifaceStatus.Name, "device/infiniband")
-	fmt.Errorf("configSriovDevice(): IBdevicePath  path:'%s'", IBdevicePath)
+	glog.Errorf("configSriovDevice(): IBdevicePath  path:'%s'", IBdevicePath)
+	glog.Errorf("configSriovDevice(): ifaceStatus.LinkType:'%s'", ifaceStatus.LinkType)
 	if strings.EqualFold(ifaceStatus.LinkType, constants.LinkTypeIB) {
 		fileName, err := ioutil.ReadDir(IBdevicePath)
 		if err != nil {
@@ -270,7 +271,7 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 			return fmt.Errorf("configSriovDevice(): failed to get deviceInfo path:'%s',err: '%s'", IBdevicePath, "ib device is empty")
 		}
 		IBdevice = fileName[0].Name()
-		fmt.Errorf("configSriovDevice(): IBdevice  :'%s'", IBdevice)
+		glog.Errorf("configSriovDevice(): IBdevice  :'%s'", IBdevice)
 	}
 	if err != nil {
 		glog.Errorf("configSriovDevice(): fail to set NumVfs for device %s", iface.PciAddress)
@@ -382,20 +383,6 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 						return err
 					}
 				}
-				linkType := iface.LinkType
-				if linkType == "" {
-					linkType = ifaceStatus.LinkType
-				}
-				// Set the vf state to "Follow"
-				if strings.EqualFold(linkType, constants.LinkTypeIB) {
-					//IBdevice
-					IBdevicePolicyPath := filepath.Join(sysInfinibandPolicy, IBdevice, "device/sriov/"+strconv.Itoa(i)+"/policy")
-					fmt.Errorf("configSriovDevice(): IBdevicePolicyPath  :'%s'", IBdevicePolicyPath)
-					if err := ioutil.WriteFile(IBdevicePolicyPath, []byte("Follow"), 0666); err != nil {
-						glog.Warningf("configSriovDevice(): fail to set vf state %s: %v", IBdevicePolicyPath, err)
-						return err
-					}
-				}
 
 			} else {
 				if err := BindDpdkDriver(addr, dpdkDriver); err != nil {
@@ -403,6 +390,28 @@ func configSriovDevice(iface *sriovnetworkv1.Interface, ifaceStatus *sriovnetwor
 					return err
 				}
 			}
+			linkType := iface.LinkType
+			if linkType == "" {
+				linkType = ifaceStatus.LinkType
+			}
+			glog.Errorf("begin to  Set the vf state to Follow")
+			glog.Errorf("configSriovDevice(): linkType  :'%s'", linkType)
+			// Set the vf state to "Follow"
+			if strings.EqualFold(linkType, constants.LinkTypeIB) {
+				//IBdevice
+				IBdevicePolicyPath := filepath.Join(sysInfinibandPolicy, IBdevice, "device/sriov/"+strconv.Itoa(i)+"/policy")
+				glog.Errorf("configSriovDevice(): IBdevicePolicyPath  :'%s'", IBdevicePolicyPath)
+				if err := ioutil.WriteFile(IBdevicePolicyPath, []byte("Follow"), 0666); err != nil {
+					glog.Warningf("configSriovDevice(): fail to set vf state %s: %v", IBdevicePolicyPath, err)
+					return err
+				}
+				bytes, err := ioutil.ReadFile(IBdevicePolicyPath)
+				if err != nil {
+					glog.Warningf("configSriovDevice(): read error  %s", err.Error())
+				}
+				glog.Errorf("configSriovDevice(): state  :'%s'", string(bytes))
+			}
+
 		}
 	}
 	// Set PF link up
