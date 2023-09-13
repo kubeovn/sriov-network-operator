@@ -95,8 +95,10 @@ func IsSupportedVendor(vendorID string) bool {
 func IsSupportedDevice(deviceID string) bool {
 	for _, n := range NicIDMap {
 		ids := strings.Split(n, " ")
-		if deviceID == ids[1] {
-			return true
+		if len(ids) > 1 {
+			if deviceID == ids[1] {
+				return true
+			}
 		}
 	}
 	return false
@@ -105,8 +107,10 @@ func IsSupportedDevice(deviceID string) bool {
 func IsSupportedModel(vendorID, deviceID string) bool {
 	for _, n := range NicIDMap {
 		ids := strings.Split(n, " ")
-		if vendorID == ids[0] && deviceID == ids[1] {
-			return true
+		if len(ids) > 1 {
+			if vendorID == ids[0] && deviceID == ids[1] {
+				return true
+			}
 		}
 	}
 	log.Info("IsSupportedModel():", "Unsupported model:", "vendorId:", vendorID, "deviceId:", deviceID)
@@ -116,8 +120,10 @@ func IsSupportedModel(vendorID, deviceID string) bool {
 func IsVfSupportedModel(vendorID, deviceID string) bool {
 	for _, n := range NicIDMap {
 		ids := strings.Split(n, " ")
-		if vendorID == ids[0] && deviceID == ids[2] {
-			return true
+		if len(ids) > 2 {
+			if vendorID == ids[0] && deviceID == ids[2] {
+				return true
+			}
 		}
 	}
 	log.Info("IsVfSupportedModel():", "Unsupported VF model:", "vendorId:", vendorID, "deviceId:", deviceID)
