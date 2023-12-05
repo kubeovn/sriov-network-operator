@@ -61,7 +61,7 @@ We always encourage the contribution for the community project. We like to colla
 
 * Make sure to create an [Issue](https://github.com/k8snetworkplumbingwg/sriov-network-operator/issues) for bug fix or the feature request.
 Issues are discussed on a regular basis at _K8s Network & Resource management_ meetings. 
-* **For bugs**: For the bug fixes, please follow the issue template format while creating a issue.  If you have already found a fix, feel free to submit a Pull Request referencing the Issue you created. Include the `Fixes #` syntax to link it to the issue you're addressing.
+* **For bugs**: For the bug fixes, please follow the issue template format while creating an issue.  If you have already found a fix, feel free to submit a Pull Request referencing the Issue you created. Include the `Fixes #` syntax to link it to the issue you're addressing.
 * **For feature requests**, For the feature requests, please follow the issue template format while creating a feature requests. We want to improve upon SRIOV Network Operator incrementally which means small changes or features at a time.
   * Please make sure each PR are compiling or passed by Travis.
   * In order to ensure your PR can be reviewed in a timely manner, please keep PRs small 
