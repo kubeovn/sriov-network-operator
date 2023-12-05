@@ -144,10 +144,11 @@ func (r *SriovNetworkNodePolicyReconciler) Reconcile(ctx context.Context, req ct
 	// Sort the policies with priority, higher priority ones is applied later
 	sort.Sort(sriovnetworkv1.ByPriority(policyList.Items))
 
+	// TODO 暂未验证-wangyudong
 	// Sync SriovNetworkNodeState objects
-	if err = r.syncAllSriovNetworkNodeStates(defaultPolicy, policyList, nodeList); err != nil {
+	/*if err = r.syncAllSriovNetworkNodeStates(defaultPolicy, policyList, nodeList); err != nil {
 		return reconcile.Result{}, err
-	}
+	}*/
 
 	if os.Getenv("SRIOV_DEVICE_PLUGIN_IMAGE") != "" {
 		// Sync Sriov device plugin ConfigMap object
@@ -160,6 +161,10 @@ func (r *SriovNetworkNodePolicyReconciler) Reconcile(ctx context.Context, req ct
 		}
 	}
 
+	// Sync SriovNetworkNodeState objects
+	if err = r.syncAllSriovNetworkNodeStates(defaultPolicy, policyList, nodeList); err != nil {
+		return reconcile.Result{}, err
+	}
 
 	// All was successful. Request that this be re-triggered after ResyncPeriod,
 	// so we can reconcile state again.
@@ -743,6 +748,11 @@ func (r *SriovNetworkNodePolicyReconciler) renderDevicePluginConfigData(pl *srio
 				nodeState := &sriovnetworkv1.SriovNetworkNodeState{}
 				err := r.Get(context.TODO(), types.NamespacedName{Namespace: namespace, Name: node.Name}, nodeState)
 				if err == nil {
+					// TODO 暂未验证-王玉东
+					// Loop through interfaces status to find a match for NetworkID or NetworkTag
+					/*if len(nodeState.Status.Interfaces) == 0 {
+						return rcl, fmt.Errorf("node state %s doesn't contain interfaces data", nodeState.Name)
+					}*/
 					// Loop through interfaces status to find a match for NetworkID or NetworkTag
 					for _, intf := range nodeState.Status.Interfaces {
 						if sriovnetworkv1.NetFilterMatch(p.Spec.NicSelector.NetFilter, intf.NetFilter) {
