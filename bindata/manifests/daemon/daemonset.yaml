@@ -22,7 +22,7 @@ spec:
       hostNetwork: true
       hostPID: true
       nodeSelector:
-        beta.kubernetes.io/os: linux
+        kubernetes.io/os: linux
         feature.node.kubernetes.io/network-sriov.capable: "true"
       tolerations:
       - operator: Exists
