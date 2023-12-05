@@ -88,6 +88,6 @@ $ git checkout -b dev/some-topic-branch
 > We encourage contributor to test SRIOV Network Operator with various NICs to check the compatibility.
 >
 ## Contact Us
-- General channel on [NPWG](https://npwg-team.slack.com/) Slack. Request an invite to NPWG slack [here](https://intel-corp.herokuapp.com/).
+- General channel on [NPWG](https://npwg-team.slack.com/) Slack. Request an invitation to NPWG slack [here](https://intel-corp.herokuapp.com/).
 - Feel free to post GitHub issues and PRs for review
 - Attend either K8s Network & Resource management or Additional K8s Network & Resource management meetings
